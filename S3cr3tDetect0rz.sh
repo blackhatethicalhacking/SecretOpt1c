@@ -56,8 +56,7 @@ if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
   exit 1
 fi
 count=`grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$domain.txt" | awk 'BEGIN {count=0} {count++} END {print count}'`
-grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$domain.txt" | awk '{print $0}' > "$domain/secrets.csv"
-
+grep -E -o "$(cat secrethub.json | jq -r '.patterns | join("|")')" "$domain/discovered_urls_for_$domain.txt" | awk '{print $0 "," FILENAME}' > "$domain/secrets.csv"
 # Print summary of secrets found
 echo "Total secrets found: $count" | lolcat
 echo "Offense is the best Defense baby!" | lolcat

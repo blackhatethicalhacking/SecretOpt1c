@@ -16,7 +16,7 @@ S3cr3tDetect0rz is written by Chris "SaintDruG" Abou-Chabke from Black Hat Ethic
 
 # Description
 
-S3cr3tDetect0rz is a powerful and versatile tool designed for red team professionals and ethical hackers. It utilizes a custom wordlist, a powerful regex pattern matching engine, and the included secrethub.json file to accurately identify secrets hidden within a website's pages. With its user-friendly interface and flexible options, S3cr3tDetect0rz makes it easy for users to customize and automate their secret detection process. The secrethub.json file, known for its strong and accurate regex patterns, further elevates the tool's accuracy in detecting sensitive information.
+S3cr3tDetect0rz is a very powerful and versatile tool designed for Red Team Professionals and Ethical Hackers. It utilizes a custom wordlist that you provide, a powerful regex pattern matching engine that is written for you based on a lot of research which is included as secrethub.json file to accurately identify secrets hidden within a website's pages. With its user-friendly interface and flexible options, S3cr3tDetect0rz makes it easy for users to customize and automate their secret detection process. The secrethub.json file, known for its strong and accurate regex patterns, further elevates the tool's accuracy in detecting sensitive information.
 
 
 # Features:
@@ -27,20 +27,20 @@ S3cr3tDetect0rz is a powerful and versatile tool designed for red team professio
 - Gobuster: The fourth step is to run gobuster, which is a tool for discovering directories and files in websites. This is done using the gobuster dir command, with the following options:
 - -u $url: specifies the URL to be tested
 - -w $wordlist: specifies the path to the wordlist
-- -x .js,.php,.yml,.env,.txt: specifies the file extensions to be tested
+- -x .js,.php,.yml,.env,.txt,.xml,.html,.config: specifies the file extensions to be tested
 - -e: enables the extension testing
-- --retry: retries the request if a response is not received
-- --retry-attempts 3: specifies the number of retries
 - -s 200,204,301,302,307,401,403: specifies the status codes to be considered as successful
 - --random-agent: sets a random user agent in each request
 - -o $domain/gobuster.txt: saves the output to a file in the directory created in step 3
-- URL extraction: The fifth step is to extract the discovered URLs from the gobuster output. This is done using the grep command with the -oE option, which extracts the URLs that match the regular expression "(http|https)://[a-zA-Z0-9./?=_-]*". The extracted URLs are then sorted and stored in a file using the sort -u > $domain/discovered_urls.txt command.
+- URL extraction: The fifth step is to extract the discovered URLs from the gobuster output. This is done using the grep command with the -oE option, which extracts the URLs that match the regular expression "(http|https)://[a-zA-Z0-9./?=_-]*". The extracted URLs are then sorted and stored in a file using the sort -u > $domain/discovered_urls.txt command. It will fetch both 200 and 301 responses adding the redirected URL to the list.
 - Loop through URLs: The sixth step is to loop through each of the discovered URLs and run the curl command to retrieve the content of the URL. This is done using a while loop and the read command, which reads each line of the discovered_urls.txt file. For each URL, the curl command is run with the -s option, which suppresses output, and the output is saved to a file with the name discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt.
-- Secrets discovery: The seventh step is to search for secrets in the output of the curl command. This is done using the grep and awk commands. The secrets are searched for using regular expressions specified in the secrethub.json file, which is processed using the jq command. The grep command searches the content
+- Secrets discovery: The seventh step is to search for secrets in the output of the curl command. This is done using the grep and awk commands. The secrets are searched for using regular expressions specified in the secrethub.json file, which is processed using the jq command. The grep command searches the content. It is highly configured to also print each URL + Full Path before each secret found to know where it found it.
 
 # Requirements:
 
 To use S3cr3tDetect0rz, you need to have the following tools installed:
+
+- figlet & lolcat: `pip install lolcat` & `apt-get install figlet`
 
 - Gobuster: Gobuster is a tool used to brute force subdomains and directories. It is the core component of S3cr3tDetect0rz and is required for the tool to function.
 You can install Gobuster on Kali Linux by running the following command:

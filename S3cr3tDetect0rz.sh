@@ -50,7 +50,6 @@ while read discovered_url; do
   curl -s $discovered_url > $domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt
 done < $domain/discovered_urls.txt
 
-# Search for secrets in the output of curl and save the result in secrets.csv
 echo "I am now searching for secrets using secrethub.json and saving the results in secrets.csv for you..."
 
 if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
@@ -59,13 +58,15 @@ if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
 fi
 
 count=0
-{
-  echo "URL Affected,Secret Found"
-  grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$domain.txt" | sort -u | while read secret; do
-    echo "$discovered_url,$secret"
-    count=$((count + 1))
-  done
-} > "$domain/secrets.csv"
+result=$(grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$domain.txt")
+echo "URL Affected,Secret Found" > "$domain/secrets.csv"
+while read -r line; do
+  if [ $(echo "$result" | grep -c "$line") -gt 0 ]; then
+    echo "discovered_url,$line" >> "$domain/secrets.csv"
+    result=$(echo "$result" | grep -v "$line")
+  fi
+done <<< "$(echo "$result" | sort -u)"
+
 
 # Print summary of secrets found
 echo "Total secrets found: $count"

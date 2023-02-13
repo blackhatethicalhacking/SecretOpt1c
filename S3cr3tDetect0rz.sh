@@ -30,16 +30,19 @@ read -p "Enter path to wordlist: " wordlist
 
 # Check if wordlist exists
 echo "Checking and Confirming your wordlist exist and proceeding with the attacks..." | lolcat
+sleep 1
 if [ ! -f $wordlist ]; then
   echo "Error: wordlist file $wordlist does not exist."  | lolcat
   exit 1
 fi
 # Create a directory to store the results of curl using the domain name of the URL provided by the user
 echo "Creating a directory to save all results..." | lolcat
+sleep 1
 domain=`echo $url | awk -F/ '{print $3}'`
 mkdir -p $domain
 # Start gobuster with given URL and wordlist
 echo "Starting GoBuster with ACTIVE Scan against the target searching for specific extensions, filtering with 200 & 301 status codes..." | lolcat
+sleep 1
 gobuster dir -u $url -w $wordlist -x .js,.php,.yml,.env,.txt,.xml,.html,.config -e -s 200,204,301,302,307,401,403 --wildcard -o $domain/gobuster.txt
 # Extract the discovered URLs for further testing
 grep "Status: 200" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u > $domain/discovered_urls.txt
@@ -47,14 +50,15 @@ grep "Status: 301" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?
 # Set the starting count to 0
 count=0
 # Loop through each URL and run curl
-echo "Performing curl on every URL I found to fetch the content..."
+echo "Performing curl on every URL I found to fetch the content..." | lolcat
+sleep 1
 while read discovered_url; do
   curl -s $discovered_url > "$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt"
 done < "$domain/discovered_urls.txt"
 
 # Search for secrets in the output of curl and save the result in secrets.csv
-echo "I am now searching for secrets using secrethub.json and saving the results in secrets.csv for you..."
-
+echo "I am now searching for secrets using secrethub.json and saving the results in secrets.csv for you..." | lolcat
+sleep 1
 if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
   echo "No discovered_urls_for_$domain file found."
   exit 1
@@ -74,4 +78,4 @@ while read discovered_url; do
   echo "$unique_secrets" >> "$domain/secrets.csv"
   echo "Total secrets found: $count" >> "$domain/secrets.csv"
 done < "$domain/discovered_urls.txt"
-echo "Total secrets found: $count"
+echo "Total secrets found: $count" | lolcat

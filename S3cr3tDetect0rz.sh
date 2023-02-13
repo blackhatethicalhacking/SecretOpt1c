@@ -55,9 +55,11 @@ if [ ! -f $domain/discovered_urls_for_* ]; then
   echo "No discovered_urls_for_* file found for $domain."
   exit 1
 fi
-count=`grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') $domain/discovered_urls_for_* | awk 'BEGIN {count=0} {count++} END {print count}'`
-grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') $domain/discovered_urls_for_* | awk '{print $0}' > $domain/secrets.csv
-
+while read line; do
+  url=$(echo $line | awk '{print $1}')
+  secret=$(echo $line | awk '{$1=""; print $0}')
+  echo "$url,$secret"
+done < <(grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') $domain/discovered_urls_for_* | awk '{print $0}') > $domain/secrets.csv
 # Print summary of secrets found
 echo "I have completed the task for $url successfully!" | lolcat
 echo "Total secrets found: $count" | lolcat

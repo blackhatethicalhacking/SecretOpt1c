@@ -10,7 +10,7 @@ quotes=("The supreme art of war is to subdue the enemy without fighting." "All w
 random_quote=${quotes[$RANDOM % ${#quotes[@]}]}
 
 # Print the quote
-echo "Offensive security tip: $random_quote - Sun Tzu" | lolcat
+echo "Offensive Security Tip: $random_quote - Sun Tzu" | lolcat
 sleep 1
 echo "MEANS, IT'S ☕ 1337 ⚡ TIME, 369 ☯ " | lolcat
 sleep 1
@@ -33,14 +33,14 @@ read -p "Enter the URL: " url
 read -p "Enter path to wordlist: " wordlist
 
 # Check if wordlist exists
-echo "Checking and Confirming if your wordlist exist..." | lolcat
+echo "Checking and Confirming your wordlist exist and proceeding with the attacks..." | lolcat
 if [ ! -f $wordlist ]; then
   echo "Error: wordlist file $wordlist does not exist."  | lolcat
   exit 1
 fi
 
 # Create a directory to store the results of curl using the domain name of the URL provided by the user
-echo "Creating Directory to save all results..." | lolcat
+echo "Creating a directory to save all results..." | lolcat
 domain=`echo $url | awk -F/ '{print $3}'`
 mkdir -p $domain
 
@@ -53,13 +53,13 @@ grep "Status: 200" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?
 grep "Status: 301" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u >> $domain/discovered_urls.txt
 
 # Loop through each URL and run curl
-echo "Performing curl on every URL I found to get the content..." | lolcat
+echo "Performing curl on every URL I found to fetch the content..." | lolcat
 while read discovered_url; do
   curl -s $discovered_url > $domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt
 done < $domain/discovered_urls.txt
 
 # Search for secrets in the output of curl and save the result in secrets.csv
-echo "I am now searching for secrets from secrethub.json and saving the results in secrets.csv for you..." | lolcat
+echo "I am now searching for Secrets using secrethub.json and saving the results in secrets.csv for you..." | lolcat
 count=`cat $domain/discovered_urls_for_* | grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') | awk 'BEGIN {count=0} {count++} END {print count}'`
 cat $domain/discovered_urls_for_* | grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') | awk -v url="$discovered_url" '{print url, $0}' \
 | tee $domain/secrets.csv | awk -v url="$discovered_url" '{print url, $0}' \
@@ -69,3 +69,4 @@ cat $domain/discovered_urls_for_* | grep -E $(cat secrethub.json | jq -r '.patte
 echo "I have completed the task for $url successfully!" | lolcat
 echo "Total secrets found: $count" | lolcat
 echo "Results saved to: $domain/secrets_with_urls.csv" | lolcat
+echo "Offense is the best Defense baby!" | lolcat

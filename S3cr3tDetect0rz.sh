@@ -58,7 +58,18 @@ done < "$domain/discovered_urls.txt"
 
 # Search for secrets in the output of curl and save the result in secrets.csv
 echo "I am now searching for secrets using secrethub.json and saving the results in secrets.csv for you..." | lolcat
+echo "Please wait 5 seconds while I search for secrets..." | lolcat
+echo "5" | pv -qL 10 | lolcat
 sleep 1
+echo "4" | pv -qL 10 | lolcat
+sleep 1
+echo "3" | pv -qL 10 | lolcat
+sleep 1
+echo "2" | pv -qL 10 | lolcat
+sleep 1
+echo "1" | pv -qL 10 | lolcat
+sleep 1
+echo "0" | pv -qL 10 | lolcat
 if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
   echo "No discovered_urls_for_$domain file found."
   exit 1

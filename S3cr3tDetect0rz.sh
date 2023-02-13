@@ -51,12 +51,13 @@ while read discovered_url; do
 done < $domain/discovered_urls.txt
 # Search for secrets in the output of curl and save the result in secrets.csv
 echo "I am now searching for Secrets using secrethub.json and saving the results in secrets.csv for you..." | lolcat
-count=`grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') $domain/discovered_urls_for_* | awk 'BEGIN {count=0} {count++} END {print count}'`
-if [ $count -gt 0 ]; then
-  grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') $domain/discovered_urls_for_* | awk '{print $0}' > $domain/secrets.csv
-else
-  echo "No secrets found." | lolcat
+if [ ! -f $domain/discovered_urls_for_* ]; then
+  echo "No discovered_urls_for_* file found for $domain."
+  exit 1
 fi
+count=`grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') $domain/discovered_urls_for_* | awk 'BEGIN {count=0} {count++} END {print count}'`
+grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') $domain/discovered_urls_for_* | awk '{print $0}' > $domain/secrets.csv
+
 # Print summary of secrets found
 echo "I have completed the task for $url successfully!" | lolcat
 echo "Total secrets found: $count" | lolcat

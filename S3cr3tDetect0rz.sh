@@ -44,6 +44,8 @@ gobuster dir -u $url -w $wordlist -x .js,.php,.yml,.env,.txt,.xml,.html,.config 
 # Extract the discovered URLs for further testing
 grep "Status: 200" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u > $domain/discovered_urls.txt
 grep "Status: 301" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u >> $domain/discovered_urls.txt
+# Set the starting count to 0
+count=0
 # Loop through each URL and run curl
 echo "Performing curl on every URL I found to fetch the content..."
 while read discovered_url; do
@@ -58,7 +60,6 @@ if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
   exit 1
 fi
 
-count=0
 while read discovered_url; do
   discovered_url_file="$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt"
   if [ ! -f "$discovered_url_file" ]; then

@@ -74,4 +74,4 @@ while read discovered_url; do
   echo "$unique_secrets" >> "$domain/secrets.csv"
   echo "Total secrets found: $count" >> "$domain/secrets.csv"
 done < "$domain/discovered_urls.txt"
-
+echo "Total secrets found: $count"

@@ -68,8 +68,7 @@ You can install Gobuster on Kali Linux by running the following command:
 
 **Main Menu**
 
-![Screenshot 2023-02-10 at 8 43 33 PM](https://user-images.githubusercontent.com/13942386/218172516-f88473cd-e9bd-472e-8541-1b2e9c3f91e6.png)
-
+![Screenshot 2023-02-13 at 3 07 14 AM](https://user-images.githubusercontent.com/13942386/218349267-9b85f492-78a8-451b-a34a-81ecbfa0d2d7.png)
 
 # Compatibility: 
 

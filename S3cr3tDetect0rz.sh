@@ -59,17 +59,14 @@ if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
 fi
 
 count=0
-while read discovered_url; do
-  results=$(grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt")
-  if [ -n "$results" ]; then
-    echo "URL Affected: $discovered_url"
-    echo "Secret Found: $results"
+{
+  echo "URL Affected,Secret Found"
+  grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$domain.txt" | sort -u | while read secret; do
+    echo "$discovered_url,$secret"
     count=$((count + 1))
-  fi
-done < $domain/discovered_urls.txt
-
-echo "Total secrets found: $count" > "$domain/secrets.csv"
+  done
+} > "$domain/secrets.csv"
 
 # Print summary of secrets found
-echo "Total secrets found: $count" | lolcat
+echo "Total secrets found: $count"
 echo "Offense is the best Defense baby!" | lolcat

@@ -47,9 +47,10 @@ grep "Status: 301" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?
 # Loop through each URL and run curl
 echo "Performing curl on every URL I found to fetch the content..."
 while read discovered_url; do
-  curl -s $discovered_url > $domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt
-done < $domain/discovered_urls.txt
+  curl -s $discovered_url > "$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt"
+done < "$domain/discovered_urls.txt"
 
+# Search for secrets in the output of curl and save the result in secrets.csv
 echo "I am now searching for secrets using secrethub.json and saving the results in secrets.csv for you..."
 
 if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
@@ -58,14 +59,22 @@ if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
 fi
 
 count=0
-result=$(grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$domain.txt")
-echo "URL Affected,Secret Found" > "$domain/secrets.csv"
-while read -r line; do
-  if [ $(echo "$result" | grep -c "$line") -gt 0 ]; then
-    echo "discovered_url,$line" >> "$domain/secrets.csv"
-    result=$(echo "$result" | grep -v "$line")
+while read discovered_url; do
+  discovered_url_file="$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt"
+  if [ ! -f "$discovered_url_file" ]; then
+    echo "File $discovered_url_file does not exist."
+    continue
   fi
-done <<< "$(echo "$result" | sort -u)"
+
+  echo "URL Affected: $discovered_url" >> "$domain/secrets.csv"
+  grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$discovered_url_file" | awk '!seen[$0]++ {
+    print "Secret Found: " $0
+    count++
+  } END {
+    print "Total secrets found: " count
+  }' >> "$domain/secrets.csv"
+done < "$domain/discovered_urls.txt"
+
 
 
 # Print summary of secrets found

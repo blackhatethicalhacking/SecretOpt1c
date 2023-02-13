@@ -49,7 +49,7 @@ for url in "${urls[@]}"; do
   echo "Performing curl on $url to fetch the content..."
   curl_response=$(curl -s "$url")
   
-  # Check for secrets in curl response
+  # Search for secrets in the output of curl
   for pattern in "${patterns[@]}"; do
     if [[ $curl_response =~ $pattern ]]; then
       secret_count=$((secret_count + 1))

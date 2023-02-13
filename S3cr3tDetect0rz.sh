@@ -45,18 +45,27 @@ gobuster dir -u $url -w $wordlist -x .js,.php,.yml,.env,.txt,.xml,.html,.config 
 grep "Status: 200" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u > $domain/discovered_urls.txt
 grep "Status: 301" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u >> $domain/discovered_urls.txt
 # Loop through each URL and run curl
-echo "Performing curl on every URL I found to fetch the content..." | lolcat
-secret_count=0
+echo "Performing curl on every URL I found to fetch the content..."
 while read discovered_url; do
-  url_full_path=$discovered_url
   curl -s $discovered_url > $domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt
-  # Search for secrets in the output of curl and save the result in secrets.csv
-  grep_output=$(grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt")
-  if [[ $grep_output ]]; then
-    echo "$url_full_path, $grep_output" >> "$domain/secrets.csv"
-    secret_count=$((secret_count + 1))
-  fi
 done < $domain/discovered_urls.txt
-# Print summary of secrets found
+
+# Search for secrets in the output of curl and save the result in secrets.csv
+echo "I am now searching for secrets using secrethub.json and saving the results in secrets.csv for you..."
+
+if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
+  echo "No discovered_urls_for_$domain file found."
+  exit 1
+fi
+
+count=0
+grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$domain.txt" | awk '!seen[$0]++ {
+    print "URL Affected: " discovered_url
+    print "Secret Found: " $0
+    count++
+} END {
+  print "Total secrets found: " count
+}' > "$domain/secrets.csv"
+# Print summary of secrets found in a readable and visually appealing way
 echo "Total secrets found: $secret_count" | lolcat
 echo "Offense is the best Defense baby!" | lolcat

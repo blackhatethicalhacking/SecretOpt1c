@@ -42,6 +42,8 @@ To use S3cr3tDetect0rz, you need to have the following tools installed:
 
 - figlet & lolcat: `pip install lolcat` & `apt-get install figlet`
 
+- (Pipe Viewer) utility to display a progress bar in the terminal. You can install "pv" by running: `sudo apt-get install pv`
+
 - Gobuster: Gobuster is a tool used to brute force subdomains and directories. It is the core component of S3cr3tDetect0rz and is required for the tool to function.
 You can install Gobuster on Kali Linux by running the following command:
 

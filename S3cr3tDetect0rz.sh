@@ -50,21 +50,14 @@ while read discovered_url; do
   curl -s $discovered_url > $domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt
 done < $domain/discovered_urls.txt
 # Search for secrets in the output of curl and save the result in secrets.csv
-echo "I am now searching for Secrets using secrethub.json and saving the results in secrets.csv for you..." | lolcat
-if [ ! -f $domain/discovered_urls_for_* ]; then
-  echo "No discovered_urls_for_* file found for $domain."
+echo "I am now searching for Secrets using secrethub.json and saving the results in secrets.csv for you..."
+if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
+  echo "No discovered_urls_for_$domain file found."
   exit 1
 fi
-for file in $domain/discovered_urls_for_*; do
-  while read -r url; do
-    count=$(grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$file" | awk -v url="$url" 'BEGIN {count=0} {count++; print url "," $0} END {print count}')
-    if [ $count -ne 0 ]; then
-      echo "I have completed the task for $url successfully!"
-      echo "$count" >> $domain/secrets.csv
-    fi
-  done < "$file"
-done
+count=`grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$domain.txt" | awk 'BEGIN {count=0} {count++} END {print count}'`
+grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$domain.txt" | awk '{print $0}' > "$domain/secrets.csv"
+
 # Print summary of secrets found
-echo "Total secrets found:"
-cat $domain/secrets.csv | column -t
+echo "Total secrets found: $count"
 echo "Offense is the best Defense baby!" | lolcat

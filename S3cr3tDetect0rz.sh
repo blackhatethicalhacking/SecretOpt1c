@@ -53,7 +53,8 @@ count=0
 echo "Performing curl on every URL I found to fetch the content..." | lolcat
 sleep 1
 while read discovered_url; do
-curl -v -s $discovered_url > "$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt"
+  echo "Fetching content from $discovered_url..."
+  curl -vsS -n $discovered_url > "$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt" 2>&1
 done < "$domain/discovered_urls.txt"
 
 # Search for secrets in the output of curl and save the result in secrets.csv

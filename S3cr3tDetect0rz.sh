@@ -37,7 +37,6 @@ if [ ! -f $wordlist ]; then
 fi
 # Create a directory to store the results of curl using the domain name of the URL provided by the user
 echo "Creating a directory to save all results..." | lolcat
-sleep 1
 domain=`echo $url | awk -F/ '{print $3}'`
 mkdir -p $domain
 # Start gobuster with given URL and wordlist

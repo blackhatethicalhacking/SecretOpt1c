@@ -27,7 +27,7 @@ grep "Status: 301" "$domain/gobuster.txt" | grep -oE "(http|https)://[a-zA-Z0-9.
 # Use xargs and curl to fetch the content of each discovered URL in parallel
 echo "Performing curl on every URL I found to fetch the content..." | lolcat
 sleep 1
-cat "$domain/discovered_urls.txt" | xargs -I{} -P 10 sh -c 'curl -sS -# -n {} > "$domain/discovered_urls_for_$(echo {} | awk -F/ '\''{print $3}'\'').txt" 2>&1'
+cat "$domain/discovered_urls.txt" | xargs -I{} -P 10 sh -c 'curl -v -sS -# -n {} > "$domain/discovered_urls_for_$(echo {} | awk -F/ '\''{print $3}'\'').txt" 2>&1'
 
 # Search for secrets in the output of curl and save the result in secrets.csv
 echo "Searching for secrets using secrethub.json and saving the results in secrets.csv for you..." | lolcat

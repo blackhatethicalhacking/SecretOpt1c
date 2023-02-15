@@ -53,7 +53,7 @@ count=0
 echo "Performing curl on every URL I found to fetch the content..." | lolcat
 sleep 1
 while read discovered_url; do
-  echo "Fetching content from $discovered_url..."
+  echo "Fetching content from $discovered_url..." | lolcat
   curl -vsS -n $discovered_url > "$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt" 2>&1
 done < "$domain/discovered_urls.txt"
 

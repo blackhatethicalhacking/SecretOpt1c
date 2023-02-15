@@ -74,3 +74,6 @@ secret_found=$(grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$d
   echo "URL Affected: $discovered_url, Secret Found: $secret_found" >> "$domain/secrets.csv"
   echo "Total secrets found: $count" >> "$domain/secrets.csv"
 done < "$domain/discovered_urls.txt"
+# Print Summary
+echo "Scan & Analysis has completed!" | lolcat
+echo "Total secrets found: $count" | lolcat

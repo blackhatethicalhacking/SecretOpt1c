@@ -71,7 +71,7 @@ while read discovered_url; do
     echo "File $discovered_url_file does not exist."
     continue
   fi
-  secret_found=$(grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$discovered_url_file" | awk '!seen[$0]++ { print $0 }')
+secret_found=$(grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt" | awk '!seen[$0]++ { print $0 }')
   count=$(echo "$secret_found" | wc -l)
   echo "URL Affected: $discovered_url, Secret Found: $secret_found" >> "$domain/secrets.csv"
   echo "Total secrets found: $count" >> "$domain/secrets.csv"

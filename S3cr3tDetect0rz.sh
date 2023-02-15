@@ -80,3 +80,5 @@ while read discovered_url; do
   echo "Total secrets found: $count" >> "$domain/secrets.csv"
 done < "$domain/discovered_urls.txt"
 echo "Total secrets found: $count" | lolcat
+echo "Here are the Secrets, GL!" | lolcat
+echo "cat secrets.csv" | lolcat

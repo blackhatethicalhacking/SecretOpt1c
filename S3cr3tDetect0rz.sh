@@ -50,7 +50,7 @@ count=0
 # Loop through each URL and run curl with xargs and parallel processing
 echo "Performing curl on every URL I found to fetch the content..." | lolcat
 sleep 1
-cat "$domain/discovered_urls.txt" | xargs -n1 -P4 -I{} sh -c 'echo "Fetching content from {}..." | lolcat; curl -vsS -n {} > "$domain/discovered_urls_for_$(echo {} | awk -F/ "{print \$3}").txt" 2>&1'
+cat "$domain/discovered_urls.txt" | xargs -P4 -I{} sh -c 'echo "Fetching content from {}..." | lolcat; curl -vsS -n {} > "$domain/discovered_urls_for_$(echo {} | awk -F/ "{print \$3}").txt" 2>&1'
 # Search for secrets in the output of curl and save the result in secrets.csv
 echo "I am now searching for secrets using secrethub.json and saving the results in secrets.csv for you..." | lolcat
 sleep 1

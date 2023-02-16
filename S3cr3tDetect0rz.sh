@@ -44,6 +44,18 @@ gobuster dir -u $url -w $wordlist -x .js,.php,.yml,.env,.txt,.xml,.html,.config 
 # Extract the discovered URLs for further testing
 grep "Status: 200" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u > $domain/discovered_urls.txt
 grep "Status: 301" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u >> $domain/discovered_urls.txt
+
+# Fetch additional URLs from waybackurls with the same extensions as gobuster
+echo "Fetching additional URLs from waybackurls with the same extensions as gobuster..." | lolcat
+sleep 1
+waybackurls "$url" | grep -E "\.js$|\.php$|\.yml$|\.env$|\.txt$|\.xml$|\.config$" | sed -E "s#(https?://)?(www\.)?$domain.*#\1\2$domain#g" | sort -u | httpx -verbose -o "$domain/waybackurls.txt" | lolcat
+
+# Combine the discovered URLs from gobuster and waybackurls, removing duplicates
+echo "Combining discovered URLs from gobuster and waybackurls..." | lolcat
+sleep 1
+cat $domain/waybackurls.txt $domain/discovered_urls.txt | sort -u > $domain/combined_urls.txt
+mv $domain/combined_urls.txt $domain/discovered_urls.txt
+
 # Set the starting count to 0
 count=0
 # Loop through each URL and run curl with xargs and parallel processing

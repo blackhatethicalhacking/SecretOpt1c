@@ -27,7 +27,6 @@ tput bold;echo "++++ CONNECTION FOUND, LET'S GO!" | lolcat
 # Take input for URL and path to wordlist
 read -p "Enter the URL: " url
 read -p "Enter path to wordlist: " wordlist
-
 # Check if wordlist exists
 echo "Checking and Confirming your wordlist exist and proceeding with the attacks..." | lolcat
 sleep 1
@@ -54,7 +53,6 @@ while read url; do
   echo "Fetching content from $url..." | lolcat
   curl -vsS -n "$url" > "$domain/discovered_urls_for_$(echo $url | awk -F/ '{print $3}').txt" 2>&1
 done < "$domain/discovered_urls.txt"
-
 # Search for secrets in the output of curl and save the result in secrets.csv
 echo "I am now searching for secrets using secrethub.json and saving the results in secrets.csv for you..." | lolcat
 sleep 1
@@ -62,7 +60,6 @@ if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
   echo "No discovered_urls_for_$domain file found."
   exit 1
 fi
-
 while read discovered_url; do
   discovered_url_file="$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt"
   if [ ! -f "$discovered_url_file" ]; then

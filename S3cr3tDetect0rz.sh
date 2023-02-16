@@ -24,7 +24,6 @@ if [ $? -ne 0 ];then
     exit 1
 fi
 tput bold;echo "++++ CONNECTION FOUND, LET'S GO!" | lolcat
-#!/bin/bash
 # Take input for URL and path to wordlist
 read -p "Enter the URL: " url
 read -p "Enter path to wordlist: " wordlist
@@ -64,21 +63,17 @@ if [ ! -f "$domain/discovered_urls_for_$domain.txt" ]; then
   exit 1
 fi
 
-# Load patterns from secrethub.json using jq and create a trie using the pyahocorasick library
-patterns=$(cat secrethub.json | jq -r '.patterns | join("\n")')
-trie=$(echo "$patterns" | python -c 'import pyahocorasick; trie = pyahocorasick.KeywordTree(); [trie.add(bytes(p, "utf-8")) for p in __import__("sys").stdin]; print(trie.to_bytes())')
-
 while read discovered_url; do
   discovered_url_file="$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt"
   if [ ! -f "$discovered_url_file" ]; then
     echo "File $discovered_url_file does not exist."
     continue
   fi
-  # Search for patterns using pyahocorasick and save the results to secrets.csv
-  echo "Searching $discovered_url_file for secrets..."
-  python -c "import pyahocorasick, sys; trie = pyahocorasick.KeywordTree(); trie.restore(bytes(open(sys.argv[1], 'rb').read())); hits = trie.search(bytes(open(sys.argv[2], 'rb').read())); [print(f'{hit[0].decode()},{hit[1]},\"{sys.argv[3]}\"') for hit in hits]" "$trie" "$discovered_url_file" "$discovered_url" >> "$domain/secrets.csv"
-  count=$((count+1))
+secret_found=$(grep -E $(cat secrethub.json | jq -r '.patterns | join("|")') "$domain/discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt" | awk '!seen[$0]++ { print $0 }')
+  count=$(echo "$secret_found" | wc -l)
+  echo "URL Affected: $discovered_url, Secret Found: $secret_found" >> "$domain/secrets.csv"
+  echo "Total secrets found: $count" >> "$domain/secrets.csv"
 done < "$domain/discovered_urls.txt"
-
-echo "Secret search complete. Found $count secrets. Results saved to $domain/secrets.csv." | lolcat
-
+# Print Summary
+echo "Scan & Analysis has completed! Results saved under $domain" | lolcat
+echo "Total secrets found for $domain: $count" | lolcat

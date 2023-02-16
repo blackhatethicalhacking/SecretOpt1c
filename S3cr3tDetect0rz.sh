@@ -86,4 +86,3 @@ done < "$domain/discovered_urls.txt"
 # Print Summary
 echo "Scan & Analysis has completed! Results saved under $domain" | lolcat
 echo "Total secrets found for $domain: $count" | lolcat
-cat $domain/secrets.csv | column -t | lolcat

@@ -18,6 +18,8 @@ S3cr3tDetect0rz is written by Chris "SaintDruG" Abou-Chabke from Black Hat Ethic
 
 S3cr3tDetect0rz is a very powerful and versatile tool designed for Red Team Professionals and Ethical Hackers. It utilizes a custom wordlist that you provide, a powerful regex pattern matching engine that is written for you based on a lot of research which is included as secrethub.json file to accurately identify secrets hidden within a website's pages. With its user-friendly interface and flexible options, S3cr3tDetect0rz makes it easy for users to customize and automate their secret detection process. The secrethub.json file, known for its strong and accurate regex patterns, further elevates the tool's accuracy in detecting sensitive information.
 
+The power is in the Recon, We use Both Active, Passive - Grep for specific Extensions, HTTPX, Sort both remove duplicates, and then we start!
+
 
 # Features:
 

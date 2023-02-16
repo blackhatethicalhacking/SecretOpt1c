@@ -32,6 +32,7 @@ S3cr3tDetect0rz is a very powerful and versatile tool designed for Red Team Prof
 - -s 200,204,301,302,307,401,403: specifies the status codes to be considered as successful
 - --random-agent: sets a random user agent in each request
 - -o $domain/gobuster.txt: saves the output to a file in the directory created in step 3
+- Waybackurls also takes place just after Gobuster, it uses the same extensions and uses httpx and then combines both results sorting them into one final big discovery!
 - Displays a cool progress bar as it analyses secrets
 - URL extraction: The fifth step is to extract the discovered URLs from the gobuster output. This is done using the grep command with the -oE option, which extracts the URLs that match the regular expression "(http|https)://[a-zA-Z0-9./?=_-]*". The extracted URLs are then sorted and stored in a file using the sort -u > $domain/discovered_urls.txt command. It will fetch both 200 and 301 responses adding the redirected URL to the list.
 - Loop through URLs: The sixth step is to loop through each of the discovered URLs and run the curl command to retrieve the content of the URL. This is done using a while loop and the read command, which reads each line of the discovered_urls.txt file. For each URL, the curl command is run with the -s option, which suppresses output, and the output is saved to a file with the name discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt.
@@ -49,6 +50,8 @@ To use S3cr3tDetect0rz, you need to have the following tools installed:
 You can install Gobuster on Kali Linux by running the following command:
 
 `sudo apt-get install gobuster`
+
+- Waybackurls : `go install github.com/tomnomnom/waybackurls@latest`
 
 - Wordlists: S3cr3tDetect0rz uses wordlists to brute force subdomains and directories. There are several good wordlists available online, such as the SecLists project (https://github.com/danielmiessler/SecLists) and the FuzzDB project (https://github.com/fuzzdb-project/fuzzdb).
 

@@ -25,7 +25,7 @@ if [ $? -ne 0 ];then
 fi
 tput bold;echo "++++ CONNECTION FOUND, LET'S GO!" | lolcat
 # Take input for URL and path to wordlist
-read -p "Enter the URL: " url
+read -p "Enter the domain: " domain
 read -p "Enter path to wordlist: " wordlist
 # Check if wordlist exists
 echo "Checking and Confirming your wordlist exist and proceeding with the attacks..." | lolcat
@@ -35,12 +35,12 @@ if [ ! -f $wordlist ]; then
   exit 1
 fi
 # Create a directory to store the results of curl using the domain name of the URL provided by the user
-domain="$(echo $url | cut -d/ -f3)"
+domain="$(echo $domain | cut -d/ -f3)"
 mkdir -p "$domain"
 # Start gobuster with given URL and wordlist
 echo "Starting GoBuster with ACTIVE Scan against the target searching for specific extensions, filtering with 200 & 301 status codes..." | lolcat
 sleep 1
-gobuster dir -u $url -w $wordlist -x .js,.php,.yml,.env,.txt,.xml,.html,.config -e -d --random-agent -s 200,204,301,302,307,401,403 -o $domain/gobuster.txt
+gobuster dir -u $domain -w $wordlist -x .js,.php,.yml,.env,.txt,.xml,.html,.config -e -d --random-agent -s 200,204,301,302,307,401,403 -o $domain/gobuster.txt
 # Extract the discovered URLs for further testing
 grep "Status: 200" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u > $domain/discovered_urls.txt
 grep "Status: 301" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u >> $domain/discovered_urls.txt
@@ -48,7 +48,7 @@ grep "Status: 301" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?
 # Fetch additional URLs from waybackurls with the same extensions as gobuster
 echo "Fetching additional URLs from waybackurls with the same extensions as gobuster..." | lolcat
 sleep 1
-waybackurls "$url" | grep -E "\.js$|\.php$|\.yml$|\.env$|\.txt$|\.xml$|\.config$" | sed -E "s#(https?://)?(www\.)?$domain.*#\1\2$domain#g" | sort -u | httpx -verbose -o "$domain/waybackurls.txt" | lolcat
+waybackurls "$domain" | grep -E "\.js$|\.php$|\.yml$|\.env$|\.txt$|\.xml$|\.config$" | sed -E "s#(https?://)?(www\.)?$domain.*#\1\2$domain#g" | sort -u | httpx -verbose -o "$domain/waybackurls.txt" | lolcat
 
 # Combine the discovered URLs from gobuster and waybackurls, removing duplicates
 echo "Combining discovered URLs from gobuster and waybackurls..." | lolcat
@@ -88,14 +88,6 @@ echo "Scan & Analysis has completed! Results saved under $domain" | lolcat
 echo "Total secrets found for $domain: $count" | lolcat
 # Matrix effect
 echo "Exiting the Matrix for 5 seconds in:" | toilet --metal -f term -F border
-sleep 1
-echo "3" | toilet --gay -f term -F border
-sleep 1
-echo "2" | toilet --metal -f term -F border
-sleep 1
-echo "1" | toilet --gay -f term -F border
-sleep 1
-
 R='\033[0;31m'
 G='\033[0;32m'
 Y='\033[1;33m'

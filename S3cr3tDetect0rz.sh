@@ -40,7 +40,7 @@ mkdir -p "$domain"
 # Start gobuster with given URL and wordlist
 echo "Starting GoBuster with ACTIVE Scan against the target searching for specific extensions..." | lolcat
 sleep 1
-gobuster dir -u https://$domain -w $wordlist -x .js,.php,.yml,.env,.txt,.xml,.html,.config --exclude-length 0 --random-agent -e -d -o $domain/gobuster.txt
+gobuster dir -u https://www.$domain -w $wordlist -x .js,.php,.yml,.env,.txt,.xml,.html,.config --exclude-length 0 --random-agent -e -d -o $domain/gobuster.txt
 # Extract the discovered URLs for further testing
 grep "Status: 200" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u > $domain/discovered_urls.txt
 grep "Status: 301" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u >> $domain/discovered_urls.txt

@@ -44,7 +44,7 @@ gobuster dir -u https://www.$domain -w $wordlist -x .js,.php,.yml,.env,.txt,.xml
 # Extract the discovered URLs for further testing
 echo "Extracting and filtering only 2xx & 3xx status codes..." | lolcat
 grep -E "Status: (2[0-9]{2}|3[0-9]{2})" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u > $domain/discovered_urls.txt
-
+sleep 1
 # Fetch additional URLs from waybackurls with the same extensions as gobuster
 echo "Fetching additional URLs from waybackurls with the same extensions as gobuster..." | lolcat
 sleep 1

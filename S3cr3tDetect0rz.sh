@@ -24,7 +24,7 @@ if [ $? -ne 0 ];then
     exit 1
 fi
 tput bold;echo "++++ CONNECTION FOUND, LET'S GO!" | lolcat
-# Take input for URL and path to wordlist
+# Take input for domain and path to wordlist
 read -p "Enter the domain: " domain
 read -p "Enter path to wordlist: " wordlist
 # Check if wordlist exists
@@ -38,9 +38,9 @@ fi
 domain="$(echo $domain | cut -d/ -f3)"
 mkdir -p "$domain"
 # Start gobuster with given URL and wordlist
-echo "Starting GoBuster with ACTIVE Scan against the target searching for specific extensions, filtering with 200 & 301 status codes..." | lolcat
+echo "Starting GoBuster with ACTIVE Scan against the target searching for specific extensions..." | lolcat
 sleep 1
-gobuster dir -u $domain -w $wordlist -x .js,.php,.yml,.env,.txt,.xml,.html,.config -e -d --random-agent -s 200,204,301,302,307,401,403 -o $domain/gobuster.txt
+gobuster dir -u https://$domain -w $wordlist -x .js,.php,.yml,.env,.txt,.xml,.html,.config --exclude-length 0 --random-agent -e -d -o $domain/gobuster.txt
 # Extract the discovered URLs for further testing
 grep "Status: 200" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u > $domain/discovered_urls.txt
 grep "Status: 301" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u >> $domain/discovered_urls.txt

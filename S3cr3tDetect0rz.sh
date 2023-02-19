@@ -42,8 +42,8 @@ echo "Starting GoBuster with ACTIVE Scan against the target searching for specif
 sleep 1
 gobuster dir -u https://www.$domain -w $wordlist -x .js,.php,.yml,.env,.txt,.xml,.html,.config --exclude-length 0 --random-agent -e -d -o $domain/gobuster.txt
 # Extract the discovered URLs for further testing
-grep "Status: 200" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u > $domain/discovered_urls.txt
-grep "Status: 301" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u >> $domain/discovered_urls.txt
+echo "Extracting and filtering only 2xx & 3xx status codes..." | lolcat
+grep -E "Status: (2[0-9]{2}|3[0-9]{2})" $domain/gobuster.txt | grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*" | sort -u > $domain/discovered_urls.txt
 
 # Fetch additional URLs from waybackurls with the same extensions as gobuster
 echo "Fetching additional URLs from waybackurls with the same extensions as gobuster..." | lolcat

@@ -87,7 +87,7 @@ done < "$domain/discovered_urls.txt"
 echo "Scan & Analysis has completed! Results saved under $domain" | lolcat
 echo "Total secrets found for $domain: $count" | lolcat
 # Matrix effect
-echo "Exiting the Matrix for 5 seconds:" | toilet --metal -f term -F border
+echo "Entering the Matrix for 5 seconds:" | toilet --metal -f term -F border
 R='\033[0;31m'
 G='\033[0;32m'
 Y='\033[1;33m'

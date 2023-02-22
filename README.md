@@ -40,6 +40,11 @@ The power is in the Recon, We use Both Active, Passive - Grep for specific Exten
 - Loop through URLs: The sixth step is to loop through each of the discovered URLs and run the curl command to retrieve the content of the URL. This is done using a while loop and the read command, which reads each line of the discovered_urls.txt file. For each URL, the curl command is run with the -s option, which suppresses output, and the output is saved to a file with the name discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt.
 - Secrets discovery: The seventh step is to search for secrets in the output of the curl command. This is done using the grep and awk commands. The secrets are searched for using regular expressions specified in the secrethub.json file, which is processed using the jq command. The grep command searches the content. It is highly configured to also print each URL + Full Path before each secret found to know where it found it.
 
+It is also, our little S3cr3t...
+
+![giphy](https://user-images.githubusercontent.com/13942386/220763198-c2a91923-c21d-4ede-851d-ce8aa983708a.gif)
+
+
 # Requirements:
 
 To use SecretOpt1c, you need to have the following tools installed:

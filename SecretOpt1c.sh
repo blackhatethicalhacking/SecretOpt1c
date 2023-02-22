@@ -11,16 +11,16 @@ echo "Offensive Security Tip: $random_quote - Sun Tzu" | lolcat
 sleep 1
 echo "MEANS, IT'S ☕ 1337 ⚡ TIME, 369 ☯ " | lolcat
 sleep 1
-figlet -w 80 -f small S3cr3tDetect0rz | lolcat
+figlet -w 80 -f small SecretOpt1c | lolcat
 echo ""
-echo "[YOUR ARE USING S3cr3tDetect0rz.sh] - (v1.0) CODED BY Chris 'SaintDruG' Abou-Chabké WITH ❤ FOR blackhatethicalhacking.com for Educational Purposes only!" | lolcat
+echo "[YOUR ARE USING SecretOpt1c.sh] - (v1.0) CODED BY Chris 'SaintDruG' Abou-Chabké WITH ❤ FOR blackhatethicalhacking.com for Educational Purposes only!" | lolcat
 sleep 1
 #check if the user is connected to the internet
 tput bold;echo "CHECKING IF YOU ARE CONNECTED TO THE INTERNET!" | lolcat
 # Check connection
 wget -q --spider https://google.com
 if [ $? -ne 0 ];then
-    echo "++++ CONNECT TO THE INTERNET BEFORE RUNNING S3cr3tDetect0rz.sh!" | lolcat
+    echo "++++ CONNECT TO THE INTERNET BEFORE RUNNING SecretOpt1c.sh!" | lolcat
     exit 1
 fi
 tput bold;echo "++++ CONNECTION FOUND, LET'S GO!" | lolcat

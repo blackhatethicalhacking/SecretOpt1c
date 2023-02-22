@@ -76,6 +76,7 @@ You can install Gobuster on Kali Linux by running the following command:
 
 **Main Menu**
 
+<img width="960" alt="SecretOpt1c" src="https://user-images.githubusercontent.com/13942386/220762924-f9f98746-ef87-469c-b4dd-2dfaec9ade7b.png">
 
 
 # Compatibility: 

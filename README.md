@@ -1,4 +1,4 @@
-# BHEH's S3cr3tDetect0rz
+# BHEH's SecretOpt1c
 
 <p align="center">
 <a href="https://www.blackhatethicalhacking.com"><img src="https://pbs.twimg.com/profile_banners/770898848197795840/1650879597/1500x500" width="600px" alt="BHEH"></a>
@@ -11,12 +11,12 @@
 
 **Unleashing secrets, for a successful attack with pinpoint accuracy**
 
-S3cr3tDetect0rz is written by Chris "SaintDruG" Abou-Chabke from Black Hat Ethical Hacking and is designed for Red Teams and Bug Bounty Hunters!
+SecretOpt1c is written by Chris "SaintDruG" Abou-Chabke from Black Hat Ethical Hacking and is designed for Red Teams and Bug Bounty Hunters!
 </p>
 
 # Description
 
-S3cr3tDetect0rz is a very powerful and versatile tool designed for Red Team Professionals and Ethical Hackers. It utilizes a custom wordlist that you provide, a powerful regex pattern matching engine that is written for you based on a lot of research which is included as secrethub.json file to accurately identify secrets hidden within a website's pages. With its user-friendly interface and flexible options, S3cr3tDetect0rz makes it easy for users to customize and automate their secret detection process. The secrethub.json file, known for its strong and accurate regex patterns, further elevates the tool's accuracy in detecting sensitive information.
+SecretOpt1c is a very powerful and versatile tool designed for Red Team Professionals and Ethical Hackers. It utilizes a custom wordlist that you provide, a powerful regex pattern matching engine that is written for you based on a lot of research which is included as secrethub.json file to accurately identify secrets hidden within a website's pages. With its user-friendly interface and flexible options, SecretOpt1c makes it easy for users to customize and automate their secret detection process. The secrethub.json file, known for its strong and accurate regex patterns, further elevates the tool's accuracy in detecting sensitive information.
 
 The power is in the Recon, We use Both Active, Passive - Grep for specific Extensions, HTTPX, Sort both remove duplicates, and then we start!
 
@@ -42,7 +42,7 @@ The power is in the Recon, We use Both Active, Passive - Grep for specific Exten
 
 # Requirements:
 
-To use S3cr3tDetect0rz, you need to have the following tools installed:
+To use SecretOpt1c, you need to have the following tools installed:
 
 - figlet & lolcat: `pip install lolcat` & `apt-get install figlet`
 
@@ -55,19 +55,19 @@ You can install Gobuster on Kali Linux by running the following command:
 
 - Waybackurls : `go install github.com/tomnomnom/waybackurls@latest`
 
-- Wordlists: S3cr3tDetect0rz uses wordlists to brute force subdomains and directories. There are several good wordlists available online, such as the SecLists project (https://github.com/danielmiessler/SecLists) and the FuzzDB project (https://github.com/fuzzdb-project/fuzzdb).
+- Wordlists: SecretOpt1c uses wordlists to brute force subdomains and directories. There are several good wordlists available online, such as the SecLists project (https://github.com/danielmiessler/SecLists) and the FuzzDB project (https://github.com/fuzzdb-project/fuzzdb).
 
 - SecretHub.json: SecretHub.json is a custom regex pattern matching engine that is included in the S3cr3tDetect0rz GitHub repository
 
 # Installation
 
-`git clone https://github.com/blackhatethicalhacking/S3cr3tDetect0rz.git`
+`git clone https://github.com/blackhatethicalhacking/SecretOpt1c.git`
 
-`cd S3cr3tDetect0rz`
+`cd SecretOpt1c`
 
-`chmod +x S3cr3tDetect0rz.sh`
+`chmod +x SecretOpt1c.sh`
 
-`./S3cr3tDetect0rz.sh`
+`./SecretOpt1c.sh`
 
 - The script will prompt you to provide the target URL(s) to test for open redirect vulnerabilities.
 - Enter the wordlist Path
@@ -76,7 +76,7 @@ You can install Gobuster on Kali Linux by running the following command:
 
 **Main Menu**
 
-![Screenshot 2023-02-13 at 3 07 14 AM](https://user-images.githubusercontent.com/13942386/218349267-9b85f492-78a8-451b-a34a-81ecbfa0d2d7.png)
+
 
 # Compatibility: 
 

@@ -16,10 +16,7 @@ SecretOpt1c is written by Chris "SaintDruG" Abou-Chabke from Black Hat Ethical H
 
 # Description
 
-SecretOpt1c is a very powerful and versatile tool designed for Red Team Professionals and Ethical Hackers. It utilizes a custom wordlist that you provide, a powerful regex pattern matching engine that is written for you based on a lot of research which is included as secrethub.json file to accurately identify secrets hidden within a website's pages. With its user-friendly interface and flexible options, SecretOpt1c makes it easy for users to customize and automate their secret detection process. The secrethub.json file, known for its strong and accurate regex patterns, further elevates the tool's accuracy in detecting sensitive information.
-
-The power is in the Recon, We use Both Active, Passive - Grep for specific Extensions, HTTPX, Sort both remove duplicates, and then we start!
-
+SecretOpt1c is a very powerful and versatile tool designed for Red Team, Pentesters and Bug Bounty Hunters. It utilizes a payload wordlist that you provide and has a built-in powerful regex pattern matching engine that is written for you based on a lot of research which is included as secrethub.json file to accurately identify secrets hidden within a website's pages. We use Both Active, and Passive recon using Gobuster and waybackurls to fetch a lot of URLs then use grep for specific extensions such as Javascript and other juicy matching patterns, with goes through httpx to find valid URLs, and then everything gets merged into one final URL removing duplicates, and then saving only the secrets founds with the snippet in a CSV file.
 
 # Features:
 
@@ -43,7 +40,6 @@ The power is in the Recon, We use Both Active, Passive - Grep for specific Exten
 It is also, our little S3cr3t...
 
 ![giphy](https://user-images.githubusercontent.com/13942386/220763198-c2a91923-c21d-4ede-851d-ce8aa983708a.gif)
-
 
 # Requirements:
 
@@ -82,7 +78,6 @@ You can install Gobuster on Kali Linux by running the following command:
 **Main Menu**
 
 <img width="960" alt="SecretOpt1c" src="https://user-images.githubusercontent.com/13942386/220762924-f9f98746-ef87-469c-b4dd-2dfaec9ade7b.png">
-
 
 # Compatibility: 
 

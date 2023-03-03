@@ -49,7 +49,7 @@ To use SecretOpt1c, you need to have the following tools installed:
 
 - (Pipe Viewer) utility to display a progress bar in the terminal. You can install "pv" by running: `sudo apt-get install pv`
 
-- Gobuster: Gobuster is a tool used to brute force subdomains and directories. It is the core component of S3cr3tDetect0rz and is required for the tool to function.
+- Gobuster: Gobuster is a tool used to brute force subdomains and directories. It is the core component of SecretOpt1c and is required for the tool to function.
 You can install Gobuster on Kali Linux by running the following command:
 
 `sudo apt-get install gobuster`
@@ -58,7 +58,7 @@ You can install Gobuster on Kali Linux by running the following command:
 
 - Wordlists: SecretOpt1c uses wordlists to brute force subdomains and directories. There are several good wordlists available online, such as the SecLists project (https://github.com/danielmiessler/SecLists) and the FuzzDB project (https://github.com/fuzzdb-project/fuzzdb).
 
-- SecretHub.json: SecretHub.json is a custom regex pattern matching engine that is included in the S3cr3tDetect0rz GitHub repository
+- SecretHub.json: SecretHub.json is a custom regex pattern matching engine that is included in the SecretOpt1c GitHub repository
 
 # Installation
 

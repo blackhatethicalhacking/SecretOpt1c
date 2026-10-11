@@ -8,73 +8,224 @@
 
 **Unleashing secrets, for a successful attack with pinpoint accuracy**
 
-SecretOpt1c is written by Chris "SaintDruG" Abou-Chabke from Black Hat Ethical Hacking and is designed for Red Teams and Bug Bounty Hunters!
+SecretOpt1c is written by Chris "SaintDruG" Abou-Chabké from Black Hat Ethical Hacking and is designed for Red Teams and Bug Bounty Hunters!
 </p>
 
-# Description
+<p align="center">
+<img src="https://img.shields.io/badge/version-2.0.0-4cd964?style=flat-square">
+<img src="https://img.shields.io/badge/engine-132%20modules%20%C2%B7%2086%20providers-4cd964?style=flat-square">
+<img src="https://img.shields.io/badge/python-3.8%2B-4cd964?style=flat-square">
+<img src="https://img.shields.io/badge/recon-active%20%2B%20passive-4cd964?style=flat-square">
+<img src="https://img.shields.io/badge/platform-Kali%20%C2%B7%20Ubuntu%20%C2%B7%20macOS-4cd964?style=flat-square">
+<img src="https://img.shields.io/badge/for-authorized%20testing%20only-ff5d5d?style=flat-square">
+</p>
 
-SecretOpt1c is designed for Red Team, Pentesters, and Bug Bounty Hunters. It is a very powerful and versatile tool that helps uncover sensitive information on websites using ACTIVE and PASSIVE Techniques for Superior Accuracy!  It utilizes a payload wordlist that you provide and has a built-in powerful regex pattern matching engine that is written for you based on a lot of research which is included as ‘secrethub.json‘ file to accurately identify secrets hidden within a website's pages. We use Both Active, and Passive recon using ‘Gobuster‘ and ‘Waybackurls‘ to fetch a lot of URLs then use grep for specific extensions such as Javascript and other juicy matching patterns, which gets piped to ‘httpx‘ to find valid URLs, and then everything gets merged into one final URL removing duplicates, which we then run ‘curl’ and fetch all the content analyzing them with our patterns and then saving only the secrets found with the snippet in a CSV file..
+---
 
-# Features:
+## What's new in v2.0
 
-- Input: The first step is to take input from the user for the URL and wordlist. This is done using the read command, which prompts the user to enter the URL and the path to the wordlist.
-- Wordlist existence check: The next step is to check if the wordlist file exists or not. This is done using the if [ ! -f $wordlist ]; then command, which checks if the file at the specified path does not exist. If the file does not exist, an error message is displayed, and the script exits.
-- Directory creation: The next step is to create a directory to store the results of the curl command. This is done using the mkdir -p $domain command, where $domain is the domain name of the URL extracted using the awk command.
-- Gobuster: The fourth step is to run gobuster, which is a tool for discovering directories and files in websites. This is done using the gobuster dir command, with the following options:
-- -u $url: specifies the URL to be tested
-- -w $wordlist: specifies the path to the wordlist
-- -x .js,.php,.yml,.env,.txt,.xml,.html,.config: specifies the file extensions to be tested
-- -e: enables the extension testing
-- -s 200,204,301,302,307,401,403: specifies the status codes to be considered as successful
-- --random-agent: sets a random user agent in each request
-- -o $domain/gobuster.txt: saves the output to a file in the directory created in step 3
-- Waybackurls also takes place just after Gobuster, it uses the same extensions and uses httpx and then combines both results sorting them into one final big discovery!
-- Displays a cool progress bar as it analyses secrets
-- URL extraction: The fifth step is to extract the discovered URLs from the gobuster output. This is done using the grep command with the -oE option, which extracts the URLs that match the regular expression "(http|https)://[a-zA-Z0-9./?=_-]*". The extracted URLs are then sorted and stored in a file using the sort -u > $domain/discovered_urls.txt command. It will fetch both 200 and 301 responses adding the redirected URL to the list.
-- Loop through URLs: The sixth step is to loop through each of the discovered URLs and run the curl command to retrieve the content of the URL. This is done using a while loop and the read command, which reads each line of the discovered_urls.txt file. For each URL, the curl command is run with the -s option, which suppresses output, and the output is saved to a file with the name discovered_urls_for_$(echo $discovered_url | awk -F/ '{print $3}').txt.
-- Secrets discovery: The seventh step is to search for secrets in the output of the curl command. This is done using the grep and awk commands. The secrets are searched for using regular expressions specified in the secrethub.json file, which is processed using the jq command. The grep command searches the content. It is highly configured to also print each URL + Full Path before each secret found to know where it found it.
+v1.0 harvested URLs and `grep`'d them for secret **keywords**. **v2.0 keeps all of that DNA** — active **+** passive recon, zero-config, the BHEH terminal swagger — and turns it into a real **secret-exposure engine** with live validation and branded reporting.
 
-It is also, our little S3cr3t...
+| | v1.0 (classic) | **v2.0** |
+|---|---|---|
+| **Matching** | keyword list via `grep` | **132 high-fidelity regex modules across 86 providers** for real secret *values* (AWS, GitHub, GitLab, Stripe, Slack, GCP, OpenAI, Anthropic, Groq, Figma, Supabase, PlanetScale, Doppler, Vault, Cloudinary, DB URIs, private keys…) + **Shannon-entropy** scoring |
+| **Generic catch-all** | — | wide **`encryptionKey` / `*_SECRET` / `.env`** assignment detection with entropy gating |
+| **Validation** | — | **LIVE validation** — verifies candidate keys against provider APIs → `VALID / invalid` |
+| **Harvesting** | gobuster + waybackurls | **built-in crawler** following **JS + `.js.map` source maps**, plus pluggable `crawl,wayback,gau,katana` (+ optional gobuster brute) |
+| **Fetching** | `curl` loop | **threaded**, real-browser UA, `Accept: */*`, **auto-decodes Brotli/gzip** (so WAF/CDN-compressed bundles still scan) |
+| **Noise control** | — | **false-positive filtering** (placeholders, `YOUR_API_KEY`, `{{env}}`) with **local-context** matching that survives minified one-line bundles |
+| **Output** | `secrets.csv` | branded **terminal table** + **`report.html`** + **`secrets.json`** + `secrets.csv` |
+| **UX** | interactive prompts | **interactive menu** + full **CLI** + **`--usage`** screen + **`--scan-file`** (pipe your own `curl`) |
+
+> It is also, our little S3cr3t...
 
 ![giphy](https://user-images.githubusercontent.com/13942386/220763198-c2a91923-c21d-4ede-851d-ce8aa983708a.gif)
 
-# Requirements:
+---
 
-To use SecretOpt1c, you need to have the following tools installed:
+# Description
 
-- figlet & lolcat: `pip install lolcat` & `apt-get install figlet`
+SecretOpt1c is designed for Red Team, Pentesters, and Bug Bounty Hunters. It is a very powerful and versatile tool that helps uncover sensitive information on websites using ACTIVE and PASSIVE Techniques for Superior Accuracy! It has a built-in powerful regex pattern matching engine — written based on a lot of research and included as the `secrethub.json` file, to accurately identify secrets hidden within a website's pages (JavaScript bundles, source maps, config, `.env`, and more). It uses **both active and passive recon**, follows JavaScript and `.js.map` source maps, harvests and de-duplicates URLs, fetches all the content, analyzes it against the patterns, and saves only the secrets found, with the snippet and the exact URL + full path where each one lives.
 
-- (Pipe Viewer) utility to display a progress bar in the terminal. You can install "pv" by running: `sudo apt-get install pv`
+> **v2.0** rebuilds the engine around high-fidelity **regex + entropy** detection, adds **live secret validation**, a built-in **crawler**, concurrent fetching that **auto-decodes Brotli/gzip**, and branded **HTML/JSON/CSV** reports, while keeping the original v1.0 bash workflow fully intact (see below).
 
-- Gobuster: Gobuster is a tool used to brute force subdomains and directories. It is the core component of SecretOpt1c and is required for the tool to function.
-You can install Gobuster on Kali Linux by running the following command:
+---
 
-`sudo apt-get install gobuster`
+# Features
 
-- Waybackurls : `go install github.com/tomnomnom/waybackurls@latest`
+### v2.0 engine
 
-- Wordlists: SecretOpt1c uses wordlists to brute force subdomains and directories. There are several good wordlists available online, such as the SecLists project (https://github.com/danielmiessler/SecLists) and the FuzzDB project (https://github.com/fuzzdb-project/fuzzdb).
+- **132 detection modules across 86 providers** — self-describing regex rules in `secrethub.json`, each with provider, severity, confidence, keywords, optional entropy floor, and optional live validator.
+- **Shannon-entropy scoring** — kills low-entropy noise, keeps real high-entropy secrets.
+- **Wide generic catch-all** — detects `encryptionKey`, `secretKey`, `apiKey`, `client_secret`, `*_SECRET`, and `.env` / `export` assignments that provider-specific rules would miss.
+- **Live validation (`--validate`)** — verifies candidate keys against provider APIs and flags them `VALID` / `invalid` (read-only endpoints only).
+- **Built-in crawler** — follows pages, `<script src>`, and **`.js.map` source maps**; pluggable sources `crawl,wayback,gau,katana`; optional `gobuster` active brute with live progress.
+- **Robust fetching** — threaded, real-browser `User-Agent` (override with `--ua`), `Accept: */*`, and **automatic Brotli/gzip decoding** so WAF/CDN-compressed JS bundles are scanned correctly (not skipped as garbage).
+- **False-positive filtering** — drops placeholders (`YOUR_API_KEY`, `example`, `{{env}}`…) using **local context around each match**, so findings survive minified single-line bundles.
+- **Branded reporting** — a live terminal table **plus** `report.html` (filter/search, severity tiles, VALID badges), `secrets.json`, and `secrets.csv`.
+- **Flexible run modes** — interactive menu, full CLI, `--usage` examples screen, `--list-rules` / `--explain`, `--selftest`, `--scan-file -` (pipe your own `curl`), and `--redact` to mask values when sharing a report.
 
-- SecretHub.json: SecretHub.json is a custom regex pattern matching engine that is included in the SecretOpt1c GitHub repository
+### v1.0 (classic) — still included
+
+<details>
+<summary><b>Original bash workflow — step by step (click to expand)</b></summary>
+
+- **Input:** prompts the user for the URL and the path to the wordlist.
+- **Wordlist existence check:** verifies the wordlist file exists; if not, errors out and exits.
+- **Directory creation:** creates a `$domain` directory to store results.
+- **Gobuster:** runs `gobuster dir` to discover directories and files, with:
+  - `-u $url` — target URL
+  - `-w $wordlist` — path to the wordlist
+  - `-x .js,.php,.yml,.env,.txt,.xml,.html,.config` — extensions to test
+  - `-e` — enable extension testing
+  - `-s 200,204,301,302,307,401,403` — status codes considered successful
+  - `--random-agent` — random user agent per request
+  - `-o $domain/gobuster.txt` — save output
+- **Waybackurls:** runs right after Gobuster using the same extensions, piped through `httpx`, then both results are combined and sorted into one big discovery.
+- **Progress bar:** displays a cool progress bar as it analyses secrets.
+- **URL extraction:** extracts discovered URLs with `grep -oE "(http|https)://[a-zA-Z0-9./?=_-]*"`, sorts unique into `discovered_urls.txt` (keeps 200 and 301, adding the redirected URL).
+- **Loop through URLs:** loops each discovered URL and `curl`s the content into per-host files.
+- **Secrets discovery:** searches the fetched content against the regex patterns in `secrethub.json` (processed with `jq`), printing each URL + full path before each secret so you know exactly where it was found.
+
+</details>
+
+---
+
+# Usage
+
+```bash
+# Interactive menu (pick a target, sources, validation, verbose)
+./SecretOpt1c.sh                 # or:  python3 secretopt1c.py
+
+# Scan a domain (active crawl + passive wayback by default)
+python3 secretopt1c.py -d example.com
+
+# Scan one file / URL directly (great for a specific JS bundle)
+python3 secretopt1c.py -d https://example.com/main.abc123.js
+
+# Verbose live crawl + live validation
+python3 secretopt1c.py -d example.com -v --validate
+
+# Choose harvest sources
+python3 secretopt1c.py -d example.com --sources crawl,wayback,gau,katana
+
+# Active brute with a wordlist (gobuster, live progress)
+python3 secretopt1c.py -d example.com -w /path/to/wordlist.txt
+
+# Pipe your own curl straight into the engine
+curl -s --compressed https://example.com/app.js | python3 secretopt1c.py --scan-file -
+
+# Scan a local file
+python3 secretopt1c.py --scan-file ./bundle.js
+
+# List all 132 modules / explain one
+python3 secretopt1c.py --list-rules
+python3 secretopt1c.py --explain stripe-secret-key
+
+# Prove the engine on synthetic secrets
+python3 secretopt1c.py --selftest
+
+# Mask values when sharing a report · custom UA · output dir
+python3 secretopt1c.py -d example.com --redact --ua 'curl/8.4' -o ~/scans/example
+```
+
+Run `python3 secretopt1c.py --usage` for the on-screen examples, or `-h` for the full flag list.
+
+---
+
+# The detection engine — `secrethub.json`
+
+Each rule is self-describing. Add your own by appending to the `rules` array:
+
+```json
+{
+  "id": "stripe-secret-key",
+  "name": "Stripe Secret Key",
+  "provider": "Stripe",
+  "severity": "critical",
+  "regex": "\\b((?:sk|rk)_live_[0-9A-Za-z]{24,})\\b",
+  "entropy": 0,
+  "keywords": ["stripe", "sk_live"],
+  "validate": { "method": "GET", "url": "https://api.stripe.com/v1/account",
+                "auth": "bearer:{{match}}", "valid_if_status": [200] }
+}
+```
+
+- `regex` — matches the **value**; `group` picks which capture holds the secret.
+- `entropy` — minimum Shannon entropy to accept (kills low-entropy noise).
+- `severity` — `critical | high | medium | low | info`.
+- `validate` — optional live check. `auth`: `bearer:` · `token:` · `header:NAME:` · `basic:` with `{{match}}` templating. Only read-only endpoints are used.
+- `false_positives` — global regexes that drop placeholders/examples.
+- `mentions` — the v1.0 keyword list, kept as an opt-in low-signal layer (`--mentions`).
+
+---
+
+# Output
+
+Every scan writes to `./<host>/` (or `-o <dir>`):
+
+- **`report.html`** — branded, filterable report (severity tiles, VALID badges, search).
+- **`secrets.json`** — structured findings for pipelines / CI.
+- **`secrets.csv`** — classic CSV (v1.0 compatible).
+
+---
+
+# Requirements
+
+### v2.0 (Python)
+
+```bash
+pip install -r requirements.txt        # requests · rich · brotli
+```
+
+Optional, auto-used if installed (for extra passive/active sources): `waybackurls`, `gau`, `katana`, `gobuster`.
+
+### v1.0 (classic bash) — optional, for the original workflow
+
+- **figlet & lolcat:** `pip install lolcat` & `apt-get install figlet`
+- **pv** (Pipe Viewer, progress bar): `sudo apt-get install pv`
+- **Gobuster:** `sudo apt-get install gobuster`
+- **Waybackurls:** `go install github.com/tomnomnom/waybackurls@latest`
+- **Wordlists:** e.g. [SecLists](https://github.com/danielmiessler/SecLists) and [FuzzDB](https://github.com/fuzzdb-project/fuzzdb)
+- **SecretHub.json:** the custom regex pattern-matching engine, included in this repo.
+
+---
 
 # Installation
 
-`git clone https://github.com/blackhatethicalhacking/SecretOpt1c.git`
+```bash
+git clone https://github.com/blackhatethicalhacking/SecretOpt1c.git
+cd SecretOpt1c
+pip install -r requirements.txt
+chmod +x SecretOpt1c.sh
+./SecretOpt1c.sh
+```
 
-`cd SecretOpt1c`
+- The script opens an interactive menu (or pass `-d <target>` to scan directly).
+- You can optionally provide a wordlist for the `gobuster` active brute.
 
-`chmod +x SecretOpt1c.sh`
+---
 
-`./SecretOpt1c.sh`
+# Screenshots
 
-- The script will prompt you to provide the target URL(s) to test for open redirect vulnerabilities.
-- Enter the wordlist Path
 
-# Screenshot
+**Banner & Menu**
 
-**Main Menu**
+<img width="1908" height="1071" alt="Screenshot 2026-10-11 at 3 45 22 PM" src="https://github.com/user-attachments/assets/05a279d0-167c-48fa-9101-6786202a6e71" />
 
-<img width="960" alt="SecretOpt1c" src="https://user-images.githubusercontent.com/13942386/220762924-f9f98746-ef87-469c-b4dd-2dfaec9ade7b.png">
+**Usage**
+
+<img width="1908" height="1071" alt="Screenshot 2026-10-11 at 3 45 32 PM" src="https://github.com/user-attachments/assets/541589da-6ce3-470f-9794-e0365285f01c" />
+
+**HTML report (`report.html`)**
+
+<img width="1908" height="924" alt="Screenshot 2026-10-11 at 3 47 17 PM" src="https://github.com/user-attachments/assets/d1bd5ec1-bc73-40cd-96f9-f7d196abe25f" />
+
+**Detection modules (`--list-rules`)**
+
+<img width="1908" height="1071" alt="Screenshot 2026-10-11 at 3 45 48 PM" src="https://github.com/user-attachments/assets/f95cc1bc-28a3-4d18-843c-53955ab6df2e" />
+
+---
 
 # Compatibility: 
 
@@ -98,4 +249,3 @@ Hack with style and showcase your dedication to hacker culture with gear that’
 
 <img src="https://github.com/blackhatethicalhacking/blackhatethicalhacking/blob/main/Merch_Promo.gif" width="540px" height="540">
   </p>
-

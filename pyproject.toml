@@ -1,0 +1,17 @@
+[project]
+name = "secretopt1c"
+version = "2.0.0"
+description = "Red Team / Bug Bounty secret hunting — active + passive harvesting, high-fidelity detection, live validation."
+authors = [{ name = "Chris 'SaintDruG' Abou-Chabke", email = "info@blackhatethicalhacking.com" }]
+license = { text = "GPL-3.0-only" }
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["bugbounty", "secrets-detection", "reconnaissance", "redteam", "infosec", "osint"]
+dependencies = ["requests>=2.28", "rich>=13.0"]
+
+[project.urls]
+Homepage = "https://www.blackhatethicalhacking.com"
+Repository = "https://github.com/blackhatethicalhacking/SecretOpt1c"
+
+[project.scripts]
+secretopt1c = "secretopt1c:main"
